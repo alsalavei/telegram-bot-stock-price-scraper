@@ -16,11 +16,11 @@ public class YahooFinanceScraper {
             String url = "https://finance.yahoo.com/quote/" + tickerYahoo;
             Document doc = Jsoup.connect(url).get();
 
-            // Извлекаем название компании
+            // Извлекаем название компании <h1 class="D(ib) Fz(18px)">Tesla, Inc. (TSLA)</h1>
             Element companyNameElement = doc.selectFirst("h1.D\\(ib\\).Fz\\(18px\\)");
             String companyName = companyNameElement != null ? companyNameElement.text() : "Unknown Company";
 
-            // Извлекаем цену акции
+            // Извлекаем цену акции <fin-streamer class="Fw(b) Fz(36px) Mb(-4px) D(ib)" data-symbol="TSLA"
             Element priceElement = doc.selectFirst("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
             String price = priceElement != null ? priceElement.text() : "Unknown Price";
 
