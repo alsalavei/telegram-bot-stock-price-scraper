@@ -1,26 +1,37 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class YahooFinanceScraper {
 
     public static void main(String[] args) {
-        String url = "https://finance.yahoo.com/quote/AAPL";
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the stock ticker: ");
+        String tickerYahoo = scanner.nextLine().toUpperCase();
+
         try {
+            String url = "https://finance.yahoo.com/quote/" + tickerYahoo;
             Document doc = Jsoup.connect(url).get();
 
-            // Используйте соответствующий CSS селектор для извлечения цены.
-            // Селектор может изменяться, поэтому его может потребоваться обновить.
-            Elements priceElements = doc.select("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
+            // Извлекаем название компании
+            Element companyNameElement = doc.selectFirst("h1.D\\(ib\\).Fz\\(18px\\)");
+            String companyName = companyNameElement != null ? companyNameElement.text() : "Unknown Company";
 
-            if (!priceElements.isEmpty()) {
-                String price = priceElements.first().text();
-                System.out.println("The current price of AAPL is: " + price);
+            // Извлекаем цену акции
+            Element priceElement = doc.selectFirst("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
+            String price = priceElement != null ? priceElement.text() : "Unknown Price";
+
+            // Выводим результат
+            if (!"Unknown Company".equals(companyName) && !"Unknown Price".equals(price)) {
+                System.out.println("The current price of " + companyName + " is: " + price);
             } else {
-                System.out.println("Unable to find the price element.");
+                System.out.println("Could not retrieve the stock data.");
             }
-
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.out.println("An error occurred while retrieving data.");
             e.printStackTrace();
         }
     }
