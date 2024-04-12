@@ -58,12 +58,15 @@ public class YahooFinanceScraper implements LongPollingSingleThreadUpdateConsume
         try {
             String url = "https://finance.yahoo.com/quote/" + ticker;
             Document doc = Jsoup.connect(url).get();
-            Element companyNameElement = doc.selectFirst("h1.D\\(ib\\).Fz\\(18px\\)");
-            Element priceElement = doc.selectFirst("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
-            Element exchangeInfoElement = doc.selectFirst(".C\\(\\$tertiaryColor\\).Fz\\(12px\\)");
 
+            // Extracting the company name <h1 class="D(ib) Fz(18px)">Tesla, Inc. (TSLA)</h1>
+            Element companyNameElement = doc.selectFirst("h1.D\\(ib\\).Fz\\(18px\\)");
             String companyName = companyNameElement != null ? companyNameElement.text() : "Unknown Company";
+            // Extracting the stock price <fin-streamer class="Fw(b) Fz(36px) Mb(-4px) D(ib)" data-symbol="TSLA"
+            Element priceElement = doc.selectFirst("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
             String price = priceElement != null ? priceElement.text() : "Unknown Price";
+            // Retrieve exchange name and currency <div class="C($tertiaryColor) Fz(12px)"><span>NasdaqGS
+            Element exchangeInfoElement = doc.selectFirst(".C\\(\\$tertiaryColor\\).Fz\\(12px\\)");
             String exchangeInfo = exchangeInfoElement != null ? exchangeInfoElement.text() : "Unknown Exchange Information";
 
             return (!"Unknown Company".equals(companyName) && !"Unknown Price".equals(price))
