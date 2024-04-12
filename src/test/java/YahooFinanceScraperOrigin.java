@@ -5,7 +5,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class YahooFinanceScraper {
+public class YahooFinanceScraper1 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -24,9 +24,14 @@ public class YahooFinanceScraper {
             Element priceElement = doc.selectFirst("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
             String price = priceElement != null ? priceElement.text() : "Unknown Price";
 
+            Element stockExchangeElement = doc.selectFirst("div.C\\(\\$tertiaryColor\\)\\.Fz\\(12px\\)");
+            String stockExchange = stockExchangeElement != null ? stockExchangeElement.text() : "NasdaqGS Info Unavailable";
+
+            //<div class="C($tertiaryColor) Fz(12px)"><span>NasdaqGS - NasdaqGS Real Time Price. Currency in USD</span></div>
+
             // Выводим результат
             if (!"Unknown Company".equals(companyName) && !"Unknown Price".equals(price)) {
-                System.out.println("The current price of " + companyName + " is: " + price);
+                System.out.println("The current price of " + companyName + " is: " + price + stockExchange);
             } else {
                 System.out.println("Could not retrieve the stock data.");
             }
