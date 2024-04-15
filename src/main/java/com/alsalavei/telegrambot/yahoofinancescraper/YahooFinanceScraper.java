@@ -57,20 +57,28 @@ public class YahooFinanceScraper implements LongPollingSingleThreadUpdateConsume
     private String getStockInfo(String ticker) {
         try {
             String url = "https://finance.yahoo.com/quote/" + ticker;
-            Document doc = Jsoup.connect(url).get();
+            //Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url)
+                    .header("User-Agent", "Mozilla/5.0 (Linux; Android 8.0.0; SM-G935F Build/R16NW; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/120.0.6099.210 Mobile Safari/537.36")
+                    .get();
 
             // Extracting the company name <h1 class="D(ib) Fz(18px)">Tesla, Inc. (TSLA)</h1>
-            Element companyNameElement = doc.selectFirst("h1.D\\(ib\\).Fz\\(18px\\)");
-            String companyName = companyNameElement != null ? companyNameElement.text() : "Unknown Company";
-            // Extracting the stock price <fin-streamer class="Fw(b) Fz(36px) Mb(-4px) D(ib)" data-symbol="TSLA"
-            Element priceElement = doc.selectFirst("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
-            String price = priceElement != null ? priceElement.text() : "Unknown Price";
-            // Retrieve exchange name and currency <div class="C($tertiaryColor) Fz(12px)"><span>NasdaqGS
-            Element exchangeInfoElement = doc.selectFirst(".C\\(\\$tertiaryColor\\).Fz\\(12px\\)");
-            String exchangeInfo = exchangeInfoElement != null ? exchangeInfoElement.text() : "Unknown Exchange Information";
+            //Element companyNameElement = doc.selectFirst("h1.D\\(ib\\).Fz\\(18px\\)");
+            //String companyName = companyNameElement != null ? companyNameElement.text() : "Unknown Company";
 
-            return (!"Unknown Company".equals(companyName) && !"Unknown Price".equals(price))
-                    ? "The current price of " + companyName + " is: " + price + "\n" + exchangeInfo
+            // Extracting the stock price <fin-streamer class="Fw(b) Fz(36px) Mb(-4px) D(ib)" data-symbol="TSLA"
+            //Element priceElement = doc.selectFirst("fin-streamer.Fw\\(b\\).Fz\\(36px\\).Mb\\(-4px\\).D\\(ib\\)");
+            //String price = priceElement != null ? priceElement.text() : "Unknown Price";
+
+            Element priceElement = doc.selectFirst(String.format("fin-streamer[data-symbol='%s'][data-testid='qsp-price']", ticker));
+            String price = priceElement != null ? priceElement.text() : "Unknown Price";
+
+            // Retrieve exchange name and currency <div class="C($tertiaryColor) Fz(12px)"><span>NasdaqGS
+            //Element exchangeInfoElement = doc.selectFirst(".C\\(\\$tertiaryColor\\).Fz\\(12px\\)");
+            //String exchangeInfo = exchangeInfoElement != null ? exchangeInfoElement.text() : "Unknown Exchange Information";
+
+            return (!"Unknown Company".equals(ticker) && !"Unknown Price".equals(price))
+                    ? "The current price of " + ticker.toUpperCase() + " is: " + price + "\n"
                     : "Could not retrieve the stock data for " + ticker + ".";
         } catch (Exception e) {
             return "An error occurred while retrieving data for " + ticker + ".";
