@@ -1,4 +1,4 @@
-package com.alsalavei.telegrambot.yahoofinancescraper;
+package com.alsalavei.telegrambot.marketdataservice;
 
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 
@@ -10,7 +10,7 @@ public class Main {
         }
 
         try (TelegramBotsLongPollingApplication botApplication = new TelegramBotsLongPollingApplication()) {
-            botApplication.registerBot(botToken, new YahooFinanceScraper(botToken));
+            botApplication.registerBot(botToken, new MarketDataService(botToken));
             System.out.println("YahooFinanceScraper successfully started!");
             Thread.currentThread().join();
         } catch (Exception e) {
