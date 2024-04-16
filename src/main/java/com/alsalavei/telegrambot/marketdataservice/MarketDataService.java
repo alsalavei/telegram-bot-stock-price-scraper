@@ -57,7 +57,6 @@ public class MarketDataService implements LongPollingSingleThreadUpdateConsumer 
 
     private String getMarketData(String ticker) {
         String data = yahooFinanceDataProvider.getMarketData(ticker);
-        System.out.println(data);
         if (data.contains("Could not retrieve data") || data.isEmpty()) {
             data = googleFinanceDataProvider.getMarketData(ticker);
         }
