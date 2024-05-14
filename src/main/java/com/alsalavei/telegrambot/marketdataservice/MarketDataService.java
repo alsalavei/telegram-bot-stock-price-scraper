@@ -21,17 +21,15 @@ public class MarketDataService implements LongPollingSingleThreadUpdateConsumer 
     @Override
     public void consume(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            // Set variables
-            String message_text = update.getMessage().getText();
-            long chat_id = update.getMessage().getChatId();
+            String messageText = update.getMessage().getText();
+            long chatId = update.getMessage().getChatId();
             String ticker = update.getMessage().getText();
             String responseMessage = getMarketData(ticker);
 
-            if (message_text.equals(ticker)) {
-                // User send /start
-                SendMessage message = SendMessage // Create a message object object
+            if (messageText.equals(ticker)) {
+                SendMessage message = SendMessage // Create a message object
                         .builder()
-                        .chatId(chat_id)
+                        .chatId(chatId)
                         .text(responseMessage)
                         .build();
                 try {
@@ -40,14 +38,13 @@ public class MarketDataService implements LongPollingSingleThreadUpdateConsumer 
                     e.printStackTrace();
                 }
             } else {
-                // Unknown command
-                SendMessage message = SendMessage
+                SendMessage message = SendMessage // A block is required when creating telegram commands
                         .builder()
-                        .chatId(chat_id)
+                        .chatId(chatId)
                         .text("Unknown command")
                         .build();
                 try {
-                    telegramClient.execute(message); // Sending our message object to user
+                    telegramClient.execute(message);
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }

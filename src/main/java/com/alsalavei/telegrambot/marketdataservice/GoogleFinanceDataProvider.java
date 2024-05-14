@@ -47,8 +47,8 @@ public class GoogleFinanceDataProvider implements MarketDataProvider {
         // Construct the URL for the Google Finance page of the ticker
         String url = "https://www.google.com/finance/quote/" + ticker + ":" + exchange;
 
-        // Build the HTTP request
-        HttpRequest request = HttpRequest.newBuilder()
+        HttpRequest request = HttpRequest
+                .newBuilder()
                 .uri(URI.create(url))
                 .build();
 
@@ -70,7 +70,6 @@ public class GoogleFinanceDataProvider implements MarketDataProvider {
         // Find the stock price element using CSS query
         Element priceElement = doc.selectFirst(".YMlKec.fxKbKc");
 
-        // Return the stock price text if the element is found, otherwise "Unknown Price"
         return priceElement != null ? priceElement.text().trim() : "Unknown Price";
     }
 }

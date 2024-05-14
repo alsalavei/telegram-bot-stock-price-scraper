@@ -19,7 +19,7 @@ public class YahooFinanceDataProvider implements MarketDataProvider {
                     ? "The current price of " + ticker.toUpperCase() + " is: " + price
                     : "Could not retrieve data for " + ticker;
         } catch (Exception e) {
-            return "Error: Could not retrieve data for for " + ticker;
+            return "Error: Could not retrieve data for " + ticker;
         }
     }
 }
